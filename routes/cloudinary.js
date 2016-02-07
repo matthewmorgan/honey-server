@@ -19,7 +19,7 @@ router.get('/getusage', (req, res, next) => {
 
 let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.length)];
 
-router.get('/randomimages/:count', (req, res, next) => {
+function fetchImages(req, res, next) {
   cloudinary.api.resources_by_moderation('manual', 'approved',
       (result)  => {
         {
@@ -31,11 +31,17 @@ router.get('/randomimages/:count', (req, res, next) => {
               selectedElements.push(selection);
             }
           }
-          res.json(selectedElements)
+          if (selectedElements.length > 0){
+            res.json(selectedElements);
+          } else {
+            fetchImages(req, res, next);
+          }
         }
       },
       {tags: 'true'});
-});
+}
+
+router.get('/randomimages/:count', fetchImages(req, res, next));
 
 router.get('/approvedimages', (req, res, next) => {
   cloudinary.api.resources_by_moderation('manual', 'approved',
