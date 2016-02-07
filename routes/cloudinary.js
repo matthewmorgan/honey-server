@@ -32,11 +32,7 @@ router.get('/randomimages/:count', (req, res, next) => {
               selectedElements.push(selection);
             }
           }
-          if (selectedElements.length > 0){
           res.json(selectedElements);
-          } else {
-          res.sendStatus(500);
-          }
         }
       },
       {tags: 'true'});
