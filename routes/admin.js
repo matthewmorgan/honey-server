@@ -3,10 +3,11 @@
  */
 'use strict';
 
-let express = require('express');
-let router = express.Router();
+let router = require('express').Router();
 
 router.post('/login', (req, res, next) => {
   const payload = req.body;
   return (payload.username === 'matt' && payload.password === 'morgan');
 });
+
+module.exports = router;
