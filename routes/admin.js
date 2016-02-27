@@ -7,7 +7,11 @@ let router = require('express').Router();
 
 router.post('/login', (req, res, next) => {
   const payload = req.body;
-  return (payload.username === 'matt' && payload.password === 'morgan');
+  if(payload.username === 'matt' && payload.password === 'morgan'){
+    res.send(200);
+  } else {
+    res.send(403);
+  }
 });
 
 module.exports = router;
