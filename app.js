@@ -18,7 +18,6 @@ const photo = require('./routes/photo');
 const photos = require('./routes/photos');
 const cloudinary = require('./routes/cloudinary');
 const mail = require('./routes/mail');
-const admin = require('./routes/admin');
 
 const app = express();
 
@@ -46,7 +45,6 @@ app.use('/mail', cors(), mail);
 app.use('/photos', cors(), photos);
 app.use('/photo', cors(), photo);
 app.use('/cloudinary', cors(), cloudinary);
-app.use('/admin', cors(), admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
