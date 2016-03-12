@@ -14,11 +14,9 @@ router.get('/email/:email', (req, res, next) => mongohandler.fetchAUserByEmail(r
 router.post('/', (req, res, next) => {
   mailservice.addOrUpdate(req, res, next, function(err, result){
     if (err) {
-      console.log('error calling mailservice.addOrUpdate');
       next(err)
     } else {
       req.emailObject = result.emailObject;
-      console.log('calling mongohandler.updateObjectByEmail');
       mongohandler.updateObjectByEmail(req, res, next)
     }
   });

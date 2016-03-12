@@ -31,6 +31,21 @@ exports.fetchARandomComment = (req, res, next) => {
   })
 };
 
+exports.fetchNamesOfAttendees = (req, res, next) => {
+  mongodb.connect(uri,  (err, db) =>  {
+    db.collection('users')
+        .find({isAttending: "true"}, (err, cursor) => {
+          if (err) next(err);
+          cursor.toArray((err, result) => {
+            const attendees = result.map((user) =>{
+              return user.name;
+            });
+            res.json(attendees)
+          });
+        })
+  })
+};
+
 exports.fetchAllComments = (req, res, next) => {
   mongodb.connect(uri,  (err, db) =>  {
       db.collection('users')
