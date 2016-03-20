@@ -151,7 +151,7 @@ exports.updateComments = (req, res, next) => {
 
 exports.updateObjectByEmail = (req, res, next) => {
   const doc = req.body;
-
+  Object.keys(doc).forEach(key => doc[key] = doc[key].trim());
   //any changes require re-approval by moderator
   doc.messageApproved=false;
   const email = doc.email;
