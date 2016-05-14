@@ -21,7 +21,7 @@ let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.leng
 
 router.get('/imagegallery', (req, res, next) => {
   cloudinary.api.resources_by_moderation('manual', 'approved',
-      (result) => res.json(results.resources), {tags: 'true'});
+      (result) => res.json(result.resources), {tags: 'true'});
 });
 
 router.get('/randomimages/:count', (req, res, next) => {
