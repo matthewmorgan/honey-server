@@ -92,5 +92,5 @@ router.get('/imagegallery', (req, res, next) => {
         });
         res.json(transformedData);
       }
-      , {tags: 'true'})
+      , {tags: 'true', max_results: '500'})
 });
