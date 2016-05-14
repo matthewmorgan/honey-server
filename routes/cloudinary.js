@@ -46,7 +46,7 @@ router.get('/randomimages/:count', (req, res, next) => {
           res.json(selectedElements);
         }
       },
-      {tags: 'true'});
+      {tags: 'true', max_results: 500});
 });
 
 router.get('/approvedimages', (req, res, next) => {
