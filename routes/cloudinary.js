@@ -20,17 +20,8 @@ router.get('/getusage', (req, res, next) => {
 let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.length)];
 
 router.get('/imagegallery', (req, res, next) => {
-  console.log('in image gallery route');
   cloudinary.api.resources_by_moderation('manual', 'approved',
-      (result) =>
-        res.json(result.resources.map(resource => {
-              return {
-                secure_url: transformUrl(resource.secure_url),
-                tags:       resource.tags
-              }
-            })
-        )
-      , {tags: 'true'});
+      (result) => res.json(result.resources), {tags: 'true'});
 });
 
 function transformUrl(url){
@@ -88,3 +79,17 @@ router.put('/updatecaption', (req, res, next) => {
 
 
 module.exports = router;
+
+//router.get('/imagegallery', (req, res, next) => {
+//  console.log('in image gallery route');
+//  cloudinary.api.resources_by_moderation('manual', 'approved',
+//      (result) =>
+//          res.json(JSON.parse(result.resources).map(resource => {
+//                return {
+//                  secure_url: transformUrl(resource.secure_url),
+//                  tags:       resource.tags
+//                }
+//              })
+//          )
+//      , {tags: 'true'})
+//});
