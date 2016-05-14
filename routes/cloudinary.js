@@ -19,10 +19,14 @@ router.get('/getusage', (req, res, next) => {
 
 let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.length)];
 
+router.get('/imagegallery', (req, res, next) => {
+  cloudinary.api.resources_by_moderation('manual', 'approved',
+      (result) => res.json(results.resources), {tags: 'true'});
+});
 
 router.get('/randomimages/:count', (req, res, next) => {
   cloudinary.api.resources_by_moderation('manual', 'approved',
-      (result)  => {
+      (result) => {
         {
           let selectedElements = [];
           let maxResults = Math.min(req.params.count, result.resources.length);
@@ -40,7 +44,7 @@ router.get('/randomimages/:count', (req, res, next) => {
 
 router.get('/approvedimages', (req, res, next) => {
   cloudinary.api.resources_by_moderation('manual', 'approved',
-      (result)  => {
+      (result) => {
         res.json(result)
       },
       {tags: 'true'});

@@ -6,23 +6,25 @@ const ObjectId = mongodb.ObjectId;
 const uri = process.env.MONGO_URL;
 //const uri = 'mongodb://localhost/honeycreek';
 const getDB = () => mongodb.connect(uri);  //getDB returns a Promise that resolves to the DB.
-console.log('MONGO_URL '+process.env.MONGO_URL);
-console.log('listenting to mongo service on '+uri);
+
+console.log('MONGO_URL ' + process.env.MONGO_URL);
+console.log('listenting to mongo service on ' + uri);
+
 exports.close = () => {
   getDB()
       .then(db => db.close());
 };
 
 exports.fetchARandomComment = (req, res, next) => {
-  mongodb.connect(uri, function (err, db) {
-    db.collection('users').count({"messageApproved": true}, function (err, count) {
+  mongodb.connect(uri, (err, db) => {
+    db.collection('users').count({"messageApproved": true}, (err, count) => {
       if (err) next(err);
       const randomCount = Math.floor(Math.random() * count);
       db.collection('users')
           .find({messageApproved: true, message: {$ne: ""}})
           .limit(-1)
           .skip(randomCount)
-          .next(function (err, result) {
+          .next((err, result) => {
             if (err) next(err)
             let message = (result && result.message) ? (result.message + ' - ' + result.name + ', ' + result.affiliation) : '';
             res.send(message);
@@ -32,12 +34,12 @@ exports.fetchARandomComment = (req, res, next) => {
 };
 
 exports.fetchNamesOfAttendees = (req, res, next) => {
-  mongodb.connect(uri,  (err, db) =>  {
+  mongodb.connect(uri, (err, db) => {
     db.collection('users')
         .find({isAttending: "true"}, (err, cursor) => {
           if (err) next(err);
           cursor.toArray((err, result) => {
-            const attendees = result.map((user) =>{
+            const attendees = result.map((user) => {
               return user.name;
             });
             res.json(attendees)
@@ -47,18 +49,18 @@ exports.fetchNamesOfAttendees = (req, res, next) => {
 };
 
 exports.fetchAllComments = (req, res, next) => {
-  mongodb.connect(uri,  (err, db) =>  {
-      db.collection('users')
-          .find({messageApproved: true, message: {$ne: ""}}, (err, cursor) => {
-            if (err) next(err);
-            cursor.toArray((err, result) => {
-              const comments = result.map((user) =>{
-                return (user && user.message) ? (user.message + ' - ' + user.name + ', ' + user.affiliation) : '';
-              });
-              res.json(comments)
+  mongodb.connect(uri, (err, db) => {
+    db.collection('users')
+        .find({messageApproved: true, message: {$ne: ""}}, (err, cursor) => {
+          if (err) next(err);
+          cursor.toArray((err, result) => {
+            const comments = result.map((user) => {
+              return (user && user.message) ? (user.message + ' - ' + user.name + ', ' + user.affiliation) : '';
             });
-          })
-    })
+            res.json(comments)
+          });
+        })
+  })
 };
 
 exports.fetchAUserById = (req, res, next) => {
@@ -71,7 +73,8 @@ exports.fetchAUserById = (req, res, next) => {
         .catch((err) => next(err));
   };
 
-  getDB().then(fetchById);
+  getDB()
+      .then(fetchById);
 };
 
 exports.fetchAUserByEmail = (req, res, next) => {
@@ -85,7 +88,8 @@ exports.fetchAUserByEmail = (req, res, next) => {
         .catch((err) => next(err));
   };
 
-  getDB().then(fetchByEmail);
+  getDB()
+      .then(fetchByEmail);
 };
 
 exports.fetchAnObjectByMongoId = (req, res, next) => {
@@ -99,7 +103,8 @@ exports.fetchAnObjectByMongoId = (req, res, next) => {
         .catch((err) => next(err));
   };
 
-  getDB().then(fetchByMongoId);
+  getDB()
+      .then(fetchByMongoId);
 };
 
 exports.createObject = (req, res, next) => {
@@ -112,8 +117,9 @@ exports.createObject = (req, res, next) => {
         .catch((err) => next(err));
   };
 
-  getDB().then(createObject)
-  .catch((err) => console.log(err));
+  getDB()
+      .then(createObject)
+      .catch((err) => console.log(err));
 };
 
 
@@ -129,17 +135,17 @@ exports.updateComments = (req, res, next) => {
   const doUpdates = (db) => {
     db.collection('users')
         .updateMany(
-        {_id: {$in: approvedIds}},
-        {$set: {messageApproved: true}}, (err, result) => {
-          if (err) next(err);
-          db.collection('users')
-              .updateMany(
-              {_id: {$in: rejectedIds}},
-              {$set: {messageApproved: false}}, (err, result) => {
-                if (err) next(err);
-                res.send(result);
-              })
-        })
+            {_id: {$in: approvedIds}},
+            {$set: {messageApproved: true}}, (err, result) => {
+              if (err) next(err);
+              db.collection('users')
+                  .updateMany(
+                      {_id: {$in: rejectedIds}},
+                      {$set: {messageApproved: false}}, (err, result) => {
+                        if (err) next(err);
+                        res.send(result);
+                      })
+            })
 
   };
 
@@ -153,7 +159,7 @@ exports.updateObjectByEmail = (req, res, next) => {
   const doc = req.body;
   Object.keys(doc).forEach(key => doc[key] = doc[key].trim());
   //any changes require re-approval by moderator
-  doc.messageApproved=false;
+  doc.messageApproved = false;
   const email = doc.email;
 
   const collectionName = req.baseUrl.match(/\w+/g).pop() + 's';
@@ -169,7 +175,8 @@ exports.updateObjectByEmail = (req, res, next) => {
         })
   };
 
-  getDB().then(updateDoc);
+  getDB()
+      .then(updateDoc);
 };
 
 exports.clearCollection = (req, res, next) => {
@@ -182,7 +189,8 @@ exports.clearCollection = (req, res, next) => {
         .catch((err) => next(err));
   };
 
-  getDB().then(clearCollectionByName);
+  getDB()
+      .then(clearCollectionByName);
 };
 
 exports.getCollection = (req, res, next) => {
@@ -198,7 +206,8 @@ exports.getCollection = (req, res, next) => {
         .on('end', () => res.json(docs))
   };
 
-  getDB().then(fetchCollection);
+  getDB()
+      .then(fetchCollection);
 };
 
 exports.deleteObject = (req, res, next) => {
@@ -210,6 +219,7 @@ exports.deleteObject = (req, res, next) => {
         .then((result) => res.json(result))
         .catch((err) => next(err))
   };
-  getDB().then(deleteObject);
+  getDB()
+      .then(deleteObject);
 };
 
