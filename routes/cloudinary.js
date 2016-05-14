@@ -22,7 +22,7 @@ let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.leng
 router.get('/imagegallery', (req, res, next) => {
   cloudinary.api.resources_by_moderation('manual', 'approved',
       (result) => res.json(result.resources), {
-        transformation: { width: 600, height: 600, crop: fill},
+        transformation: { width: 600, height: 600, crop: 'fill'},
         tags: 'true'
   });
 });
