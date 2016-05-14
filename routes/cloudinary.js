@@ -27,7 +27,7 @@ let randomElement = (myArray) => myArray[Math.floor(Math.random() * myArray.leng
 function transformUrl(url) {
   const parts = url.split('/');
   const lastIndex = parts.length - 1;
-  parts.splice(lastIndex, 0, 'w_600,h_600,c_fill');
+  parts[lastIndex-1]= 'w_600,h_600,c_fill';
   return parts.join('/');
 }
 
